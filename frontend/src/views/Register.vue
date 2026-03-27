@@ -150,7 +150,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { register } from '../utils/api'
+import { register } from '../api/auth'
 
 const router = useRouter()
 

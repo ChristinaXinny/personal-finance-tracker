@@ -122,7 +122,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { login } from '../utils/api'
+import { login } from '../api/auth'
 
 const router = useRouter()
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 
 const SALT_ROUNDS = 10;
 const ADMIN_USERNAME = '7270_root';
@@ -108,28 +109,95 @@ const createAdminUser = async () => {
   };
 };
 
+/**
+ * check if transactions collection exists
+ */
+const checkTransactionCollectionExists = async () => {
+  const db = mongoose.connection?.db;
+  if (!db) return false;
+
+  const collectionName = Transaction.collection.name;
+  const existing = await db.listCollections({ name: collectionName }).toArray();
+  
+  return existing.length > 0;
+};
+
+/**
+ * create transactions collection
+ */
+const createTransactionCollection = async () => {
+  const db = mongoose.connection?.db;
+  if (!db) throw new Error('Database connection not established');
+
+  const collectionName = Transaction.collection.name;
+  
+  try {
+    await db.createCollection(collectionName, {
+      validator: {
+        $jsonSchema: {
+          bsonType: 'object',
+          required: ['user_id', 'type', 'amount', 'category'],
+          properties: {
+            user_id: { bsonType: 'objectId' },
+            type: { bsonType: 'string', enum: ['income', 'expense'] },
+            amount: { bsonType: 'number', minimum: 0 },
+            category: { bsonType: 'string' },
+            description: { bsonType: 'string' },
+            transaction_date: { bsonType: 'date' }
+          }
+        }
+      }
+    });
+    
+    await Transaction.init();
+    
+    const collection = db.collection(collectionName);
+    await collection.createIndex({ user_id: 1 });
+    await collection.createIndex({ transaction_date: -1 });
+    await collection.createIndex({ user_id: 1, transaction_date: -1 });
+    
+    console.log('Transactions collection created with indexes');
+    
+  } catch (err) {
+    if (err?.codeName === 'NamespaceExists' || /already exists/i.test(err?.message || '')) {
+      console.log('Transactions collection already exists');
+      return;
+    }
+    throw err;
+  }
+};
+
 const initializeDatabase = async () => {
   const result = {
-    collectionCreated: false,
+    usersCollectionCreated: false,
+    transactionsCollectionCreated: false,
     adminCreated: false,
     adminInfo: null,
     message: ''
   };
   
-  // 1. check if collection exists
-  const collectionExists = await checkCollectionExists();
-  
-  if (!collectionExists) {
+  // 1. Users collection
+  const usersCollectionExists = await checkCollectionExists();
+  if (!usersCollectionExists) {
     await createUserCollection();
-    result.collectionCreated = true;
+    result.usersCollectionCreated = true;
     result.message += 'Users collection created. ';
   } else {
     result.message += 'Users collection already exists. ';
   }
   
-  // 2. check if admin user exists and create if not
-  const adminExists = await checkAdminExists();
+  // 2. Transactions collection
+  const transactionsCollectionExists = await checkTransactionCollectionExists();
+  if (!transactionsCollectionExists) {
+    await createTransactionCollection();
+    result.transactionsCollectionCreated = true;
+    result.message += 'Transactions collection created. ';
+  } else {
+    result.message += 'Transactions collection already exists. ';
+  }
   
+  // 3. Admin user
+  const adminExists = await checkAdminExists();
   if (!adminExists) {
     const adminInfo = await createAdminUser();
     result.adminCreated = true;
@@ -147,5 +215,7 @@ module.exports = {
   checkCollectionExists,
   createUserCollection,
   checkAdminExists,
-  createAdminUser
+  createAdminUser,
+  checkTransactionCollectionExists,
+  createTransactionCollection
 };
