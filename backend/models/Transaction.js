@@ -42,7 +42,6 @@ const TransactionSchema = new mongoose.Schema({
   versionKey: false
 });
 
-// 🔥 修复这里：使用 async 语法，不再用 next()
 TransactionSchema.pre('findOneAndUpdate', async function() {
   this.set({ updated_at: new Date() });
 });

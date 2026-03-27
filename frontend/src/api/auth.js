@@ -7,7 +7,7 @@ import fetchApi from './base'
  * @returns {Promise} Response with token and user info
  */
 export const login = async (username, password) => {
-  return fetchApi('/users/login', {
+  return fetchApi('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ username, password })
   })
@@ -19,31 +19,30 @@ export const login = async (username, password) => {
  * @returns {Promise} Response with created user info
  */
 export const register = async (username, password) => {
-  return fetchApi('/users/register', {
+  return fetchApi('/auth/register', {
     method: 'POST',
     body: JSON.stringify({ username, password })
   })
 }
 
+export const getProfile = async () => {
+  return fetchApi('/users/profile', { method: 'GET' })
+}
 
-/**
- * Change password
- * @param {object} passwordData - { currentPassword, newPassword }
- * @returns {Promise} Response
- */
-export const changePassword = async (passwordData) => {
-  return fetchApi('/users/change-password', {
+export const updateProfile = async (data) => {
+  return fetchApi('/users/profile', {
     method: 'PUT',
-    body: JSON.stringify(passwordData)
+    body: JSON.stringify(data)
   })
 }
 
-/**
- * Delete user account
- * @returns {Promise} Response
- */
-export const deleteAccount = async () => {
-  return fetchApi('/users/account', {
-    method: 'DELETE'
+export const changePassword = async (data) => {
+  return fetchApi('/users/password', {
+    method: 'PUT',
+    body: JSON.stringify(data)
   })
+}
+
+export const deactivateAccount = async () => {
+  return fetchApi('/users/account', { method: 'DELETE' })
 }

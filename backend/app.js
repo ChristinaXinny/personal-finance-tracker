@@ -9,8 +9,9 @@ require('dotenv').config();
 const connectDB = require('./config/database');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 const transactionsRouter = require('./routes/transactions');
+const usersRouter = require('./routes/users');
 
 // Connect to MongoDB
 connectDB();
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/', indexRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/transactions', transactionsRouter);
 

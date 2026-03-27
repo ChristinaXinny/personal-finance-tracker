@@ -27,14 +27,12 @@ const UserSchema = new mongoose.Schema({
   versionKey: false
 });
 
-UserSchema.pre('findOneAndUpdate', function(next) {
+UserSchema.pre('findOneAndUpdate', async function() {
   this.set({ updated_at: new Date() });
-  next();
 });
 
-UserSchema.pre('updateOne', function(next) {
+UserSchema.pre('updateOne', async function() {
   this.set({ updated_at: new Date() });
-  next();
 });
 
 module.exports = mongoose.model('User', UserSchema);
