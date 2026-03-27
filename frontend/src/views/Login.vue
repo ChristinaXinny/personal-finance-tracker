@@ -74,6 +74,15 @@
                 </div>
               </div>
               
+              <!-- Remember Me Checkbox -->
+              <div class="mb-4">
+                <label class="checkbox-label">
+                  <input type="checkbox" v-model="rememberMe">
+                  <span class="checkmark"></span>
+                  <span class="checkbox-text">Remember me</span>
+                </label>
+              </div>
+              
               <!-- Submit Button -->
               <button 
                 type="submit" 
@@ -113,17 +122,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
 import { login } from '../utils/api'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 const credentials = ref({
   username: '',
   password: ''
 })
 
+const rememberMe = ref(false)
 const showPassword = ref(false)
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -142,21 +150,24 @@ const handleLogin = async () => {
   
   const { token, user } = result.data.data
   
-  // Always store in sessionStorage (no remember me)
-  sessionStorage.setItem('token', token)
-  sessionStorage.setItem('user', JSON.stringify(user))
+  // 根据 Remember Me 选择存储位置
+  if (rememberMe.value) {
+    localStorage.setItem('token', token)
+    localStorage.setItem('user', JSON.stringify(user))
+    console.log('✅ Saved to localStorage (remember me)')
+  } else {
+    sessionStorage.setItem('token', token)
+    sessionStorage.setItem('user', JSON.stringify(user))
+    console.log('✅ Saved to sessionStorage (session only)')
+  }
   
-  authStore.setUser(user)
-  authStore.setToken(token)
-  
+  // 跳转到 dashboard
   router.push('/dashboard')
 }
 </script>
 
 <style scoped>
 /* ==================== Morandi Color Palette ==================== */
-/* Note: CSS variables in scoped styles won't work for global :root */
-/* Using direct color values instead */
 
 /* Container Styles */
 .login-container {
@@ -323,7 +334,68 @@ const handleLogin = async () => {
   color: #9CAF9A;
 }
 
-/* Login Button - Fixed with direct color values */
+/* Remember Me Checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border: 2px solid rgba(159, 175, 154, 0.4);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-label:hover .checkmark {
+  border-color: #9CAF9A;
+}
+
+.checkbox-label input:checked ~ .checkmark {
+  background-color: #9CAF9A;
+  border-color: #9CAF9A;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-label .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-text {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #8C8A89;
+}
+
+/* Login Button */
 .btn-login {
   width: 100%;
   padding: 14px;
