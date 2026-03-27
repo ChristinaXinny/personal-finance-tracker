@@ -42,14 +42,13 @@ const TransactionSchema = new mongoose.Schema({
   versionKey: false
 });
 
-TransactionSchema.pre('findOneAndUpdate', function(next) {
+// 🔥 修复这里：使用 async 语法，不再用 next()
+TransactionSchema.pre('findOneAndUpdate', async function() {
   this.set({ updated_at: new Date() });
-  next();
 });
 
-TransactionSchema.pre('updateOne', function(next) {
+TransactionSchema.pre('updateOne', async function() {
   this.set({ updated_at: new Date() });
-  next();
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);

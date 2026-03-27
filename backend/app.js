@@ -8,8 +8,9 @@ require('dotenv').config();
 // Import database connection
 const connectDB = require('./config/database');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const transactionsRouter = require('./routes/transactions');
 
 // Connect to MongoDB
 connectDB();
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/transactions', transactionsRouter);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
