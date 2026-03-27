@@ -55,11 +55,6 @@
         <i :class="item.icon"></i>
         <span>{{ item.label }}</span>
       </router-link>
-      <div class="mobile-divider"></div>
-      <router-link to="/profile" class="mobile-nav-link" @click="mobileMenuOpen = false">
-        <i class="bi bi-person"></i>
-        <span>Profile</span>
-      </router-link>
       <button class="mobile-nav-link logout" @click="handleLogout">
         <i class="bi bi-box-arrow-right"></i>
         <span>Logout</span>
