@@ -1,5 +1,5 @@
 // utils/api.js
-const API_BASE_URL = 'http://localhost:3000'
+const API_BASE_URL = 'http://localhost:3000/api'
 
 // Generic fetch wrapper with error handling
 const fetchApi = async (endpoint, options = {}) => {
