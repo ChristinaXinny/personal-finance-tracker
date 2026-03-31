@@ -58,7 +58,9 @@
                   </div>
                 </td>
                 <td>
-                  <span class="category-name">{{ category.name }}</span>
+                  <router-link :to="`/categories/${category._id}`" class="category-name">
+                    {{ category.name }}
+                  </router-link>
                 </td>
                 <td>
                   <span :class="['type-badge', category.type]">
@@ -722,6 +724,12 @@ onMounted(() => {
 .category-name {
   font-weight: 600;
   color: #5C5B5A;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.category-name:hover {
+  color: #7C9A7A;
 }
 
 .type-badge {
