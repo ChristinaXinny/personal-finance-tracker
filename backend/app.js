@@ -12,6 +12,8 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const transactionsRouter = require('./routes/transactions');
 const usersRouter = require('./routes/users');
+const categoriesRouter = require('./routes/categories');
+const aiRouter = require('./routes/ai');
 
 // Connect to MongoDB
 connectDB();
@@ -34,6 +36,8 @@ app.use('/api/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/transactions', transactionsRouter);
+app.use('/api/categories', categoriesRouter);
+app.use('/api/ai', aiRouter);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
