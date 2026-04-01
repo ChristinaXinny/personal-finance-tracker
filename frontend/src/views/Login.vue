@@ -150,7 +150,7 @@ const handleLogin = async () => {
 
   const { token, user } = result.data
 
-  // 根据 Remember Me 选择存储位置
+  // Store token based on Remember Me selection
   if (rememberMe.value) {
     localStorage.setItem('token', token)
     localStorage.setItem('user', JSON.stringify(user))
@@ -161,7 +161,7 @@ const handleLogin = async () => {
     console.log('✅ Saved to sessionStorage (session only)')
   }
 
-  // 跳转到 dashboard
+  // Redirect to dashboard
   router.push('/dashboard')
 }
 </script>
