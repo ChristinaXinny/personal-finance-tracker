@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "69c75d6991fe51b6454b6f0a"
+  },
+  "username": "lxy",
+  "password_hash": "$2b$10$mglzaJnEYJz62yWLvd/xde6PREikQlXctXcUJzQ1RenJJo4s50eVC",
+  "created_at": {
+    "$date": "2026-03-28T04:47:37.683Z"
+  },
+  "updated_at": {
+    "$date": "2026-03-28T04:47:37.683Z"
+  },
+  "is_active": true
+},
+{
+  "_id": {
+    "$oid": "69cc0263c816dffad5b32118"
+  },
+  "username": "7270admin",
+  "password_hash": "$2b$10$g8aW3H/l39jP62XxJqFJn.2sb07B895.D6t..yahzUNoEYJzKZNl6",
+  "created_at": {
+    "$date": "2026-03-31T17:20:35.942Z"
+  },
+  "updated_at": {
+    "$date": "2026-04-01T04:16:52.101Z"
+  },
+  "is_active": true
+}]
